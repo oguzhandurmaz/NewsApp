@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/NewsFragment">
+
+    <fragment
+        android:id="@+id/NewsFragment"
+        android:name="com.example.newsapp.ui.NewsFragment"
+        android:label="@string/news_fragment_label"
+        tools:layout="@layout/fragment_news">
+        <action
+            android:id="@+id/action_NewsFragment_to_NewsDetailFragment"
+            app:destination="@id/NewsDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/NewsDetailFragment"
+        android:name="com.example.newsapp.ui.NewsDetailFragment"
+        android:label="@string/news_detail_fragment_label"
+        tools:layout="@layout/fragment_news_detail">
+        <action
+            android:id="@+id/action_NewsDetailFragment_to_NewsFragment"
+            app:destination="@id/NewsFragment" />
+        <argument
+            android:name="model"
+            app:argType="com.example.newsapp.network.models.Article" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsFavoriteFragment"
+        android:name="com.example.newsapp.ui.NewsFavoriteFragment"
+        android:label="@string/news_favorites_fragment_label"
+        tools:layout="@layout/fragment_news_favorite">
+        <action
+            android:id="@+id/action_newsFavoriteFragment_to_NewsDetailFragment"
+            app:destination="@id/NewsDetailFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_newsFavoriteFragment"
+        app:destination="@id/newsFavoriteFragment" />
+</navigation>
