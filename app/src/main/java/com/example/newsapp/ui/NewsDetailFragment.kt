@@ -4,12 +4,12 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,12 +20,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -34,9 +37,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentNewsDetailBinding
 import com.example.newsapp.network.Result
@@ -82,10 +83,17 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentNewsDetailBinding.bind(view)
         binding.composeView.apply {
+            val typedValue = TypedValue();
+            requireContext().theme.resolveAttribute(
+                android.R.attr.textColorPrimary,
+                typedValue,
+                true
+            );
+            val color = ContextCompat.getColor(requireContext(), typedValue.resourceId)
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 Log.d("Repo", args.model.toString())
-                DetailScreen(news = args.model)
+                DetailScreen(news = args.model, color)
             }
         }
         successDialog = Utils.getSuccessDialog(requireContext())
@@ -126,9 +134,8 @@ class NewsDetailFragment : Fragment(R.layout.fragment_news_detail) {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun DetailScreen(news: Article) {
+fun DetailScreen(news: Article, color: Int) {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
     val dateFormat2 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     Column(
@@ -136,13 +143,11 @@ fun DetailScreen(news: Article) {
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        GlideImage(
+        AsyncImage(
             model = news.urlToImage, contentDescription = "", modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-        ) {
-            it.centerCrop()
-        }
+                .height(200.dp), contentScale = ContentScale.Crop
+        )
         Text(
             modifier = Modifier
                 .padding(8.dp)
@@ -151,9 +156,10 @@ fun DetailScreen(news: Article) {
             fontSize = 20.sp,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color(color)
         )
-        news.author?.let{
+        news.author?.let {
             Text(
                 modifier = Modifier
                     .padding(8.dp, 2.dp)
@@ -164,13 +170,17 @@ fun DetailScreen(news: Article) {
         Text(
             modifier = Modifier.padding(10.dp, 6.dp),
             text = news.description ?: ""
-            ?: "", fontSize = 16.sp
+            ?: "", fontSize = 16.sp,
+            color = Color(color)
         )
         Text(
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth(),
             text = dateFormat.parse(news.publishedAt ?: "")?.let { dateFormat2.format(it) } ?: "",
-            textAlign = TextAlign.End, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            textAlign = TextAlign.End,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            color = Color(color))
     }
 }

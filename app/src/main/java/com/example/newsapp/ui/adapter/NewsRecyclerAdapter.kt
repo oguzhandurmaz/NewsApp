@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
+import coil.load
 import com.example.newsapp.INewsRecycler
 import com.example.newsapp.R
 import com.example.newsapp.databinding.NewItemBinding
@@ -55,11 +55,7 @@ class NewsRecyclerAdapter (private val callback: INewsRecycler? = null): Recycle
                     imageFavorite.setImageResource(R.drawable.ic_unfavorite)
                     labelFavorite.text = root.context.getString(R.string.add_favorite)
                 }
-                Glide.with(root.context)
-                    .load(item.data.urlToImage)
-                    .centerCrop()
-                    //.placeholder()
-                    .into(imageCover)
+                imageCover.load(item.data.urlToImage)
             }
         }
     }
