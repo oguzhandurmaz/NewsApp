@@ -42,7 +42,7 @@ In project/gradle add your api key in buildTypes section.
 2. Clone the repo
 
     ```sh
-    git clone https://github.com/your_username_/Project-Name.git
+    git clone https://github.com/oguzhandurmaz/NewsApp.git
     ```
 
  3. Go to [Firebase Console](https://console.firebase.google.com/project/_/database) and create your project and add Android part. While creating project you should chose Firebase Analytics enabled or you can active later. Add **google-service.json** file to project as shown. Enable Realtime Database and Authentication features. In Authentication page, go to **Sign-in method** tab and activate **Anonymous** sign in.
